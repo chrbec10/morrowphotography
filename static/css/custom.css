@@ -1,0 +1,28 @@
+/*Homepage*/
+
+.parallax {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.hero {
+    min-height: 100%;
+    background-image: url();
+    position: relative;
+}
+
+.title {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+}
+
+.border {
+    font-size: 25px;
+    padding: 18px;
+    background-color: #111;
+}
