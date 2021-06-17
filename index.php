@@ -4,7 +4,7 @@ include_once("includes/header.php");
 include_once("includes/navigation.php");
 ?>
 
-<div class="parallax hero">
+<div class="parallax" id="hero">
     <div class="title">
         <span class="border">THIS IS A TEST</span>
     </div>
