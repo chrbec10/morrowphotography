@@ -7,10 +7,11 @@
     background-size: cover;
 }
 
-.hero {
+#hero {
     min-height: 100%;
-    background-image: url();
+    background-image: url("S_7100_-0605.jpg");
     position: relative;
+    background-position: left;
 }
 
 .title {
