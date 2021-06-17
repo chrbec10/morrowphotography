@@ -18,12 +18,23 @@ html, body {
     background-position: right;
 }
 
+#hero::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(255,255,255,0.25);
+}
+
 .title {
     position: absolute;
     left: 0;
     top: 50%;
     width: 100%;
     text-align: center;
+    color: #CCC;
 }
 
 .border {
