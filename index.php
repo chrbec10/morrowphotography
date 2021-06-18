@@ -6,7 +6,13 @@ include_once("includes/navigation.php");
 
 <div class="parallax" id="hero" style="background-image: url('S_7100_-0605.jpg')">
     <div class="title">
-        <img src="CM Signature.png">
+        <div class="container">
+            <img class="titlesignature" src="CM Signature Black.png">
+        </div>
+    </div>
+    <div class="scrollcontainer">    
+        <p class="scrollmore"><a href="#" class="scrollmore">Scroll down or click here to learn more</a></p>
+        <i class="fa fa-chevron-down"></i>    
     </div>
 </div>
 

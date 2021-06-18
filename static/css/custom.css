@@ -1,5 +1,7 @@
 html, body {
     height:100%;
+    font-family: 'Spectral', serif;
+    scroll-behavior: smooth;
 }
 
 /*Homepage*/
@@ -25,20 +27,44 @@ html, body {
     right: 0px;
     bottom: 0px;
     left: 0px;
-    background-color: rgba(255,255,255,0.25);
+    background-color: rgba(255,255,255,0.35);
 }
 
 .title {
     position: absolute;
     left: 0;
-    top: 50%;
+    top: calc(50% - 125px);
     width: 100%;
     text-align: center;
     color: #CCC;
 }
 
-.border {
-    font-size: 25px;
-    padding: 18px;
-    background-color: #111;
+.titlesignature {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.scrollcontainer {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    color: #777;
+    font-size: 1.5rem;
+    padding-bottom: 0.5em;
+    text-align: center;
+}
+
+.scrollmore {
+    margin-bottom: -10px;
+}
+
+a.scrollmore:link, a.scrollmore:visited {
+    text-decoration: none;
+    color: #777;
+}
+
+a.scrollmore:hover {
+    color: #333;
 }
