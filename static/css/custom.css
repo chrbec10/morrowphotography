@@ -15,9 +15,8 @@ html, body {
 
 #hero {
     min-height: 100%;
-    background-image: url("S_7100_-0605.jpg");
+    background-image: url("../images/hero-desktop.jpg");
     position: relative;
-    background-position: right;
 }
 
 #hero::before {
@@ -33,7 +32,7 @@ html, body {
 .title {
     position: absolute;
     left: 0;
-    top: calc(50% - 125px);
+    top: calc(50% - 175px);
     width: 100%;
     text-align: center;
     color: #CCC;
@@ -47,24 +46,44 @@ html, body {
 .scrollcontainer {
     position: absolute;
     left: 0;
-    bottom: 0;
+    bottom: 60px;
     width: 100%;
     text-align: center;
     color: #777;
-    font-size: 1.5rem;
-    padding-bottom: 0.5em;
     text-align: center;
 }
 
 .scrollmore {
-    margin-bottom: -10px;
+    font-size: 1.2rem;
+    text-shadow: 0 0 10px #CCC, 0 0 5px #CCC;
+    margin-bottom: -5px
 }
 
 a.scrollmore:link, a.scrollmore:visited {
     text-decoration: none;
-    color: #777;
+    color: #333;
 }
 
 a.scrollmore:hover {
-    color: #333;
+    color: #000;
+}
+
+.home-text {
+    background-color: #333;
+    color: #CCC;
+    box-shadow: 0 0 10px #333;
+    position: relative;
+    z-index: 1;
+}
+
+@media only screen and (max-width: 786px) {
+    .title {
+        top: calc(50% - 115px)
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    .title {
+        top: calc(50% - 140px)
+    }
 }
