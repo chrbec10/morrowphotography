@@ -76,6 +76,8 @@ a.scrollmore:hover {
     z-index: 1;
 }
 
+/*Homepage media queries*/
+
 @media only screen and (max-width: 786px) {
     .title {
         top: calc(50% - 115px)

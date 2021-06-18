@@ -18,10 +18,15 @@ include_once("includes/navbar.php");
 <div class="home-text" id="about">
     <div class="container py-5 text-center">
         <h2>About Me</h2>
-        <h5>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna 
-            aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint 
-            occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</h5>
+        <h5>My name is Colin Morrow, and I'm a photographer. 
+            <br>
+            I was born in the shadow of the Rocky mountains, 
+            but left my home when I was very young. Nowadays 
+            I operate out of Ontario, but I'm always chasing 
+            views that remind me of home. My passion is for 
+            nature photography, and finding beauty in the 
+            unpredictability, the chaos, and the calmness of 
+            the natural world.</h5>
     </div>
 </div>
 <div style="min-height:100%">benis</div>
