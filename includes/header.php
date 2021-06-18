@@ -11,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!--Custom CSS-->
-    <link href="static/css/custom.css" rel="stylesheet">
+    <link href= <?php echo __DIR__ . "/../static/css/custom.css"; ?> rel="stylesheet">
 
     <!--Dynamic page title-->
     <title>CM Photography<?php if (!empty($title)) echo " | " . $title; ?></title>
