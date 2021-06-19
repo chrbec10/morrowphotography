@@ -20,6 +20,8 @@
     <!--FontAwesome-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <!--Favicon-->
+    <link rel="shortcut icon" type="image/png" href="static/img/favicon.png"/>
 
     <!--Dynamic page title-->
     <title>CM Photography<?php if (!empty($title)) echo " | " . $title; ?></title>

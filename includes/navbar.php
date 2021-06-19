@@ -1,8 +1,8 @@
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark custom-nav">
         <div class="container">
-            <a class="navbar-brand" href="."><img style="height:40px" src="static/images/CMBrand.png"></a>
+            <a class="navbar-brand" href="."><img style="height:40px" src="static/img/CMBrand.png"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cmNav" aria-controls="cmNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>

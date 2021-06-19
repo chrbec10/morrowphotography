@@ -15,7 +15,7 @@ html, body {
 
 #hero {
     min-height: 100%;
-    background-image: url("../images/hero-desktop.jpg");
+    background-image: url("../img/hero-desktop.jpg");
     position: relative;
 }
 
@@ -73,7 +73,22 @@ a.scrollmore:hover {
     color: #CCC;
     box-shadow: 0 0 10px #333;
     position: relative;
-    z-index: 1;
+}
+
+#info {
+    background-image: url("../img/info-desktop.jpg");
+    position: relative;
+    min-height: 100%;
+}
+
+#info::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    background-color: rgba(255,255,255,0.35);
 }
 
 /*Homepage media queries*/
@@ -88,4 +103,21 @@ a.scrollmore:hover {
     .title {
         top: calc(50% - 140px)
     }
+}
+
+/*Navbar*/
+
+.custom-nav {
+    background-color: #222;
+}
+
+/*Footer*/
+
+.footer {
+    background-color: #222;
+    color: #CCC;
+}
+
+.footer-copyright {
+    color: #777;
 }

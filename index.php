@@ -7,12 +7,12 @@ include_once("includes/navbar.php");
 <div class="parallax" id="hero">
     <div class="title">
         <div class="container">
-            <img class="titlesignature" src="static/images/CM Signature Black.png">
+            <img class="titlesignature" src="static/img/CM Signature Black.png">
         </div>
     </div>
     <div class="scrollcontainer mb-3">    
         <p class="scrollmore"><a href="#about" class="scrollmore">Scroll down or click here to learn more</a></p>
-        <i class="fa fa-chevron-down"></i>    
+        <i class="fa fa-chevron-down"></i>
     </div>
 </div>
 <div class="home-text" id="about">
@@ -29,6 +29,15 @@ include_once("includes/navbar.php");
             the natural world.</h5>
     </div>
 </div>
-<div style="min-height:100%">benis</div>
+<div class="parallax" id="info">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4" style="background-color:red; height: 100%;">benis</div>
+            <div class="col-md-4" style="background-color:green; height: 100%;">benis</div>
+            <div class="col-md-4" style="background-color:blue; height: 100%;">benis</div>
+        </div>
+    </div>
+</div>
 <?php
 include_once("includes/footer.php");
+?>
