@@ -1,12 +1,12 @@
 <?php
 
 //Setup database access
-include_once("../includes/config.php");
+include_once("../includes/header.php");
 include_once("../includes/db.php");
 
 //TODO: Define variables
 
-//Check if we have an image ID
+//Check whether we were given an ID before continuing
 if (isset($_GET['id']) && !empty(trim($_GET['id']))){
     //Get our ID parameter
     $image_ID = trim($_GET['id']);
@@ -35,9 +35,19 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))){
                 $image = $row['image'];
                 $description = $row['description'];
 
+                $sql = "SELECT tags_rel.tag_ID, tags_list.tag FROM tags_rel INNER JOIN tags_list ON tags_list.ID = tags_rel.tag_ID WHERE tags_rel.image_ID = :image_ID";
+                if ($stmt = $pdo->prepare($sql)){
+                    $stmt->bindParam(":image_ID", $param_image_ID);
+
+                    $param_image_ID = $image_ID;
+
+                    if ($stmt->execure()){
+                        $tags = json_encode( $stmt->fetchAll(PDO::FETCH_NUM) );
+                    }
+                }
+
             } else {
                 //URL doesn't contain a valid ID
-                //TODO: Handle
                 header("location: ../404.php");
                 exit();
             }
@@ -47,6 +57,11 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))){
     }
     //Close statement
     unset($stmt);
+
+} else {
+    //We weren't given an ID
+    header("location: ../404.php");
+    exit();
 }
 
 

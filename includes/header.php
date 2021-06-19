@@ -1,3 +1,8 @@
+<?php
+require_once(__DIR__ . '/config.php');
+
+?>
+
 <!DOCTYPE html>
 <html lang='en'>
 
@@ -11,7 +16,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!--Custom CSS-->
-    <link href= "static/css/custom.css" rel="stylesheet">
+    <link href="<?php echo $site_root;?>/static/css/custom.css" rel="stylesheet">
 
     <!--Google Fonts-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -21,7 +26,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!--Favicon-->
-    <link rel="shortcut icon" type="image/png" href="static/img/favicon.png"/>
+    <link rel="shortcut icon" type="image/png" href="<?php echo $site_root;?>/static/img/favicon.png"/>
 
     <!--Dynamic page title-->
     <title>CM Photography<?php if (!empty($title)) echo " | " . $title; ?></title>
