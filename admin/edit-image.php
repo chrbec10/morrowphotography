@@ -1,10 +1,36 @@
 <?php
-
+$title = "Edit Image";
 //Setup database access
 include_once("../includes/header.php");
 include_once("../includes/db.php");
 
-//TODO: Define variables
+
+//Set alert banner text and colour
+if (isset($_GET['r']) && ($_GET['r'] != '')){
+    $r = trim($_GET['r']);
+
+    if (isset($_GET['e']))
+        $e = trim($_GET['e']);
+
+    switch($r){
+        case 1:
+            $response_div = 'alert-success';
+            $response_txt = 'New Agent created successfully';
+            break;
+        case 2:
+            $response_div = 'alert-success';
+            $response_txt = 'Changes submitted successfully';
+            break;
+        default:
+            $response_div = 'd-none';
+            $response_txt = '';
+            break;
+    }
+} else {
+    $response_div = 'd-none';
+    $response_txt = '';
+}
+
 
 //Check whether we were given an ID before continuing
 if (isset($_GET['id']) && !empty(trim($_GET['id']))){
@@ -42,7 +68,7 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))){
                     $param_image_ID = $image_ID;
 
                     if ($stmt->execute()){
-                        $tags_ID = $stmt->fetchAll();
+                        $tags = $stmt->fetchAll();
                     }
                 }
 
@@ -64,16 +90,113 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))){
     exit();
 }
 
+//Set error variables
+$title_err = $description_err = $twitter_err = $facebook_err = $tags_err = '';
 
 //TODO: Process form data on submit
 if (isset($_POST['id']) && !empty(trim($_POST['id']))){
+
+    //Validation for text
+    $input_title = trim($_POST['title']);
+    if (!empty($input_title)) {
+        $title = $input_title;
+    } else {
+        $title_err = "Please enter a title for the image";
+    }
+
+    $input_description = trim($_POST['description']);
+    if (!empty($input_description)) {
+        $description = $input_description;
+    } else {
+        $description_err = "Please enter a description for the image";
+    }
+
+    $input_twitter = trim($_POST['twitter']);
+    if (!empty($input_twitter)) {
+        if (filter_var($input_twitter, FILTER_VALIDATE_URL) !== false) {
+            $twitter = $input_twitter;
+        } else {
+            $twitter_err = "Please enter a valid URL";
+        }
+    } else {
+        $twitter_err = "Please enter a twitter link";
+    }
+
+    $input_facebook = trim($_POST['facebook']);
+    if (!empty($input_facebook)) {
+        if (filter_var($input_facebook, FILTER_VALIDATE_URL) !== false) {
+            $facebook = $input_facebook;
+        } else {
+            $facebook_err = "Please enter a valid URL";
+        }
+    } else {
+        $facebook_err = "Please enter a facebook link";
+    }
+
+    if (!empty($_POST['tags'])) {
+        $tags = $_POST['tags'];
+    } else {
+        $tags_err = "Please select at least one tag for the image";
+    }
     
+    //If there aren't any errors
+    if (empty($title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($tags_err)) {
+
+        //Create SQL query
+        $sql = "UPDATE images SET title = :title, twitter = :twitter, facebook = :facebook, description = :description WHERE ID = :image_ID";
+
+        //If query prepares successfully
+        if ($stmt = $pdo->prepare($sql)) {
+
+            //Bind variables
+            $stmt->bindParam(":title", $param_title);
+            $stmt->bindParam(":twitter", $param_twitter);
+            $stmt->bindParam(":facebook", $param_facebook);
+            $stmt->bindParam(":description", $param_description);
+            $stmt->bindParam(":image_ID", $param_image_ID);
+
+            //Set parameters
+            $param_title = $title;
+            $param_twitter = $twitter;
+            $param_facebook = $facebook;
+            $param_description = $description;
+            $param_image_ID = $image_ID;
+            
+            //If query executes successfully
+            if($stmt->execute()) {
+                $sql = "DELETE FROM tags_rel WHERE image_ID = :image_ID";
+                if ($stmt = $pdo->prepare($sql)){
+                    $stmt->bindParam("image_ID", $param_image_ID);
+                    $param_image_ID = $image_ID;
+
+                    if ($stmt->execute()) {
+                        $sql = "INSERT INTO tags_rel(image_ID, tag_ID) VALUES";
+                    
+                        //Build an insert row for each tag
+                        foreach($tags as $tag) {
+                            
+                            $sql .= "(" . $image_ID . "," . $tag . "),";
+                        };
+
+                        //Trim last comma from SQL query
+                        $sql = substr($sql, 0, -1);
+                        $sql .= ";";
+                        //If our tags are inserted successfully
+                        if($stmt=$pdo->query($sql)) {
+                            header("location: edit-image.php?id=" . $image_ID . "&r=2");
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
+
 
 //Retrieve tags list to populate Select dropdown
 $sql = "SELECT * FROM tags_list";
 if($stmt = $pdo->query($sql)) {
-    $tags_array[] = $stmt->fetchAll();
+    $tags_array = $stmt->fetchAll();
 }
 ?>
 
@@ -86,14 +209,15 @@ include_once('../includes/navbar.php');
 <div class="page-container">
     <main class="main">
         <div class="container">
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
+        <div class="alert <?php echo $response_div; ?>"><?php echo $response_txt; ?></div>
+        <br>
+            <div style="text-align: center;">
+                <img style="max-width:400px; text-align:center; box-shadow: 0 5px 10px #555;" src="<?php echo '../uploads/thumb_' . $image;?>">
+            </div>
+            <br>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $image_ID; ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
-                    <input type="file" name="image" id="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>" aria-describedby="fileHelp">
-                    <div id="fileHelp" class="form-text">File must be a .jpg, .jpeg, .gif, or .png file, and less than 2MB in size.</div> 
-                    <span class="invalid-feedback"><?php echo $image_err;?></span>
-                </div>
-                <br>
-                <div class="form-group">
+                    <input type="hidden" value="<?php echo $image_ID?>" name="id" id="id">
                     <label for="title">Image Title</label>
                     <input type="text" class="form-control <?php echo (!empty($title_err)) ? 'is-invalid' : ''; ?>" name="title" id="title" value="<?php echo $title; ?>">
                     <span class="invalid-feedback"><?php echo $title_err;?></span>
@@ -121,10 +245,8 @@ include_once('../includes/navbar.php');
                     <label for="tags">Search Tags</label>
                     <select class="tags-select form-control <?php echo (!empty($tags_err)) ? 'is-invalid' : ''; ?>" name="tags[]" id="tags" multiple="multiple">
                     <?php
-                    foreach($tags_array as $tag_sub){
-                        foreach($tag_sub as $tag){
-                            echo"<option value='" . $tag['ID'] . "'>" . $tag['tag'] . "</option>";
-                        }
+                    foreach($tags_array as $tag){
+                        echo"<option value='" . $tag['ID'] . "'>" . $tag['tag'] . "</option>";
                     }
                     ?>
                     </select>
@@ -140,8 +262,21 @@ include_once('../includes/navbar.php');
     </main>
 </div>
 <script>
-$(document).ready(function() {
-    $('.tags-select').select2();
-});
+
+    
+    $(document).ready(function() {
+        //Setup select box for tags
+        $('.tags-select').select2();
+        //Set image's current tags as selected by default
+        <?php
+            $selected_tags = '';
+            foreach($tags as $tag){
+                $selected_tags .= "'" . $tag['tag_ID'] . "', ";
+            }
+            $selected_tags = substr($selected_tags, 0, -1);
+        ?>
+        $('.tags-select').val([ <?php echo $selected_tags; ?>]).trigger('change');
+    });
+
 </script>
 </body>

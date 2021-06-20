@@ -93,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $tags_err = "Please select at least one tag for the image";
     }
+
     //Validate file upload
     if(isset($_FILES["image"]) && $_FILES["image"]["error"] == 0){
 
@@ -131,6 +132,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $image_name = hash_file('sha1', $image) . '.jpg';
             if (!file_exists($destination . '/' . $image_name)){
                 compressImage($image, $image_name, $quality, $destination);
+            } else {
+                $image_err = 'Image already exists. Please choose a new file to upload.';
             }
         }
     } else if(!isset($_FILES["image"])) {
@@ -175,7 +178,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $sql = "INSERT INTO tags_rel(image_ID, tag_ID) VALUES";
                     
                     //Build an insert row for each tag
-                    //TODO: Setup tag array
                     foreach($tags as $tag) {
                         
                         $sql .= "(" . $created . "," . $tag . "),";
@@ -197,7 +199,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 //Retrieve tags list to populate Select dropdown
 $sql = "SELECT * FROM tags_list";
 if($stmt = $pdo->query($sql)) {
-    $tags_array[] = $stmt->fetchAll();
+    $tags_array = $stmt->fetchAll();
 }
 
 unset($stmt);
@@ -249,10 +251,8 @@ include_once('../includes/navbar.php');
                     <label for="tags">Search Tags</label>
                     <select class="tags-select form-control <?php echo (!empty($tags_err)) ? 'is-invalid' : ''; ?>" name="tags[]" id="tags" multiple="multiple">
                     <?php
-                    foreach($tags_array as $tag_sub){
-                        foreach($tag_sub as $tag){
+                    foreach($tags_array as $tag){
                             echo"<option value='" . $tag['ID'] . "'>" . $tag['tag'] . "</option>";
-                        }
                     }
                     ?>
                     </select>
@@ -268,9 +268,19 @@ include_once('../includes/navbar.php');
     </main>
 </div>
 <script>
-$(document).ready(function() {
-    $('.tags-select').select2();
-});
+    $(document).ready(function() {
+        //Setup select box for tags
+        $('.tags-select').select2();
+        //Set image's current tags as selected by default
+        <?php
+            $selected_tags = '';
+            foreach($tags as $tag){
+                $selected_tags .= "'" . $tag . "', ";
+            }
+            $selected_tags = substr($selected_tags, 0, -1);
+        ?>
+        $('.tags-select').val([<?php echo $selected_tags; ?>]).trigger('change');
+    });
 </script>
 </body>
 
