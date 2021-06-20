@@ -33,22 +33,22 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
                     $param_image_ID = $image_ID;
                     //If all goes well, direct back to edit page with success message
                     if($stmt->execute()){
-                        echo("deleted");
+                        header("location: delete-success.php");
                     //else direct back to edit page with error message
                     } else {
-                        header("location: edit-listing.php?id=" . $propertyID . "&r=7");
+                        header("location: edit-listing.php?id=" . $image_ID . "&r=3");
                     }
                 } else {
-                    header("location: edit-listing.php?id=" . $propertyID . "&r=7");
+                    header("location: edit-listing.php?id=" . $image_ID . "&r=3");
                 }
             } else {
-                header("location: edit-listing.php?id=" . $propertyID . "&r=8&e=" . $imageID);
+                header("location: edit-listing.php?id=" . $image_ID . "&r=4");
             }
         } else {
-            header("location: edit-listing.php?id=" . $propertyID . "&r=7");
+            header("location: edit-listing.php?id=" . $image_ID . "&r=3");
         }
     } else {
-        header("location: edit-listing.php?id=" . $propertyID . "&r=7");
+        header("location: edit-listing.php?id=" . $image_ID . "&r=3");
     }
 
 } else {

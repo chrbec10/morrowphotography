@@ -21,6 +21,14 @@ if (isset($_GET['r']) && ($_GET['r'] != '')){
             $response_div = 'alert-success';
             $response_txt = 'Changes submitted successfully';
             break;
+        case 3:
+            $response_div = 'alert-danger';
+            $response_txt = 'Failed to delete entry.';
+            break;
+        case 4:
+            $response_div = 'alert-danger';
+            $response_txt = 'Image not found in database.';
+            break;
         default:
             $response_div = 'd-none';
             $response_txt = '';

@@ -136,7 +136,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $image_err = 'Image already exists. Please choose a new file to upload.';
             }
         }
-    } else if(!isset($_FILES["image"])) {
+    } else if(!isset($_FILES["image"]) || ($_FILES["image"]["error"] == 4)) {
         $image_err = 'Please choose an image to upload.';
 
     } else {
