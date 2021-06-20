@@ -115,7 +115,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //Check filesize
         if ($filesize > $maxsize) {
-            $image_err = 'File too large. Please upload a file that is less than 2MB in size.';
+            $image_err = 'File too large. Please upload a file that is less than 5MB in size.';
         
         //Check errors
         } else if ($error != 0){
@@ -219,7 +219,7 @@ include_once('../includes/navbar.php');
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="file" name="image" id="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>" aria-describedby="fileHelp">
-                    <div id="fileHelp" class="form-text">File must be a .jpg, .jpeg, .gif, or .png file, and less than 2MB in size.</div> 
+                    <div id="fileHelp" class="form-text">File must be a .jpg, .jpeg, .gif, or .png file, and less than 5MB in size.</div> 
                     <span class="invalid-feedback"><?php echo $image_err;?></span>
                 </div>
                 <br>
