@@ -44,18 +44,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty(filter_var($input_message, FILTER_SANITIZE_STRING))) {
         $message = wordwrap((filter_var($input_message, FILTER_SANITIZE_STRING)), 70, "\r\n");
     } else if (empty($input_message)) {
-        $message_err = "Please enter a message to send."
+        $message_err = "Please enter a message to send.";
     } else {
-        $message_err = "There was a problem sending your message. Please try again."
+        $message_err = "There was a problem sending your message. Please try again.";
     }
 
     $input_subject = $_POST['subject'];
     if (!empty(filter_var($input_subject, FILTER_SANITIZE_STRING))) {
         $subject = filter_var($input_subject, FILTER_SANITIZE_STRING);
     } else if (empty($input_subject)) {
-        $subject_err = "Please enter a subject for your message."
+        $subject_err = "Please enter a subject for your message.";
     } else {
-        $subject_err = "There was a problem processing your subject line. Please try again."
+        $subject_err = "There was a problem processing your subject line. Please try again.";
     }
 
     //If there aren't any errors, process and send the email
@@ -69,7 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="page-container">
 <main class="main">
     <div class="container">
-        <h2>Contact Me</h2>
+        <h2 class="text-center">Contact Me</h2>
+        <br>
         <p>You're welcome to contact me via email using the form below, or you can send me a private message using any of my social media profiles.</p>
             <p><a href="#"><strong>Facebook:</strong> CMPhotography</a></p>
             <p><a href="#"><strong>Twitter:</strong> @CMPhotography</a></p>

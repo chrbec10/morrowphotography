@@ -28,6 +28,15 @@ a:hover {
     color: #555;
 }
 
+.btn-delete {
+    background-color: rgb(126, 25, 25);
+    color: #DDD;
+}
+
+.btn-delete:hover {
+    color: white;
+}
+
 /*Homepage*/
 
 .parallax {
@@ -113,6 +122,11 @@ a.scrollmore:hover {
     bottom: 0px;
     left: 0px;
     background-color: rgba(255,255,255,0.35);
+}
+
+#feature {
+    z-index: 1 !important;
+    background-color: rgba(255,255,255,0.5);
 }
 
 /*Homepage media queries*/

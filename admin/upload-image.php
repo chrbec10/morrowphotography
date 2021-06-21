@@ -216,6 +216,9 @@ include_once('../includes/navbar.php');
 <div class="page-container">
     <main class="main">
         <div class="container">
+            <br>
+            <h2 class="text-center">New Image</h2>
+            <br>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <input type="file" name="image" id="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>" aria-describedby="fileHelp">

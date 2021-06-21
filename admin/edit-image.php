@@ -217,8 +217,10 @@ include_once('../includes/navbar.php');
 <div class="page-container">
     <main class="main">
         <div class="container">
-        <div class="alert <?php echo $response_div; ?>"><?php echo $response_txt; ?></div>
-        <br>
+            <div class="alert <?php echo $response_div; ?>"><?php echo $response_txt; ?></div>
+            <br>
+            <h2 class="text-center">Edit Image</h2>
+            <br>
             <div style="text-align: center;">
                 <img style="max-width:400px; text-align:center; box-shadow: 0 5px 10px #555;" src="<?php echo '../uploads/thumb_' . $image;?>">
             </div>
@@ -262,6 +264,7 @@ include_once('../includes/navbar.php');
                 </div>
                 <br>
                 <button type="submit" class="btn btn-dark btn-submit">Submit</button>
+                <a href="delete-image.php?id=<?php echo $image_ID; ?>" class="btn btn-delete float-end confirm">Delete</a>
             </form>
         </div>
     <?php
@@ -286,5 +289,8 @@ include_once('../includes/navbar.php');
         $('.tags-select').val([ <?php echo $selected_tags; ?>]).trigger('change');
     });
 
+    $('.confirm').on('click', function () {
+        return confirm('Are you sure you want to delete this image?\nThis action cannot be undone.');
+    });
 </script>
 </body>

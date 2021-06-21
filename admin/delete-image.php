@@ -50,7 +50,6 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))) {
     } else {
         header("location: edit-listing.php?id=" . $image_ID . "&r=3");
     }
-
 } else {
     header("location: ../404.php", 404);
 }
