@@ -2,7 +2,7 @@
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark custom-nav">
         <div class="container">
-            <a class="navbar-brand" href="<?php echo $site_root?>"><img style="height:40px" src="<?php echo $site_root?>/static/img/CMBrand.png"></a>
+            <a alt="Home" class="navbar-brand" href="<?php echo $site_root?>"><img style="height:40px; width:170px" src="<?php echo $site_root?>/static/img/CMBrand.png" alt=''></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cmNav" aria-controls="cmNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
             </button>

@@ -202,7 +202,7 @@ if (isset($_POST['id']) && !empty(trim($_POST['id']))){
 
 
 //Retrieve tags list to populate Select dropdown
-$sql = "SELECT * FROM tags_list";
+$sql = "SELECT * FROM tags_list ORDER BY tag";
 if($stmt = $pdo->query($sql)) {
     $tags_array = $stmt->fetchAll();
 }
@@ -222,7 +222,7 @@ include_once('../includes/navbar.php');
             <h2 class="text-center">Edit Image</h2>
             <br>
             <div style="text-align: center;">
-                <img style="max-width:400px; text-align:center; box-shadow: 0 5px 10px #555;" src="<?php echo '../uploads/thumb_' . $image;?>">
+                <img style="max-width:400px; max-height:400px; text-align:center; box-shadow: 0 5px 10px #555;" src="<?php echo '../uploads/thumb_' . $image;?>">
             </div>
             <br>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $image_ID; ?>" method="POST" enctype="multipart/form-data">
