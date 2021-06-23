@@ -218,8 +218,8 @@ include_once('../includes/navbar.php');
     <main class="main">
         <div class="container">
             <div class="alert <?php echo $response_div; ?>"><?php echo $response_txt; ?></div>
-            <br>
-            <h2 class="text-center">Edit Image</h2>
+            <?php if($response_div != "d-none") {echo "<br>";} ?>
+            <h1 class="text-center">Edit Image</h1>
             <br>
             <div style="text-align: center;">
                 <img style="max-width:400px; max-height:400px; text-align:center; box-shadow: 0 5px 10px #555;" src="<?php echo '../uploads/thumb_' . $image;?>">

@@ -44,10 +44,11 @@ a:hover {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    color: #DDD;
 }
 
 #hero {
-    min-height: 100%;
+    min-height: calc(100% - 66px);
     background-image: url("../img/hero-desktop.jpg");
     position: relative;
 }
@@ -59,16 +60,17 @@ a:hover {
     right: 0px;
     bottom: 0px;
     left: 0px;
-    background-color: rgba(255,255,255,0.35);
+    background-color: rgba(0,0,0,0.35);
 }
 
 .title {
     position: absolute;
     left: 0;
-    top: calc(50% - 175px);
+    top: 50%;
     width: 100%;
     text-align: center;
-    color: #CCC;
+    color: #DDD;
+    transform: translateY(calc(-50% - 66px));
 }
 
 .titlesignature {
@@ -79,39 +81,38 @@ a:hover {
 .scrollcontainer {
     position: absolute;
     left: 0;
-    bottom: 60px;
+    bottom: 0;
     width: 100%;
     text-align: center;
-    color: #777;
+    color: #EEE;
     text-align: center;
 }
 
 .scrollmore {
     font-size: 1.2rem;
-    text-shadow: 0 0 10px #CCC, 0 0 5px #CCC;
     margin-bottom: -5px
 }
 
 a.scrollmore:link, a.scrollmore:visited {
     text-decoration: none;
-    color: #333;
+    color: #EEE;
 }
 
 a.scrollmore:hover {
-    color: #000;
+    color: white;
 }
 
 .home-text {
     background-color: #222;
-    color: #CCC;
+    color: #DDD;
     box-shadow: 0 0 10px black;
     position: relative;
+    z-index: 1 !important;
 }
 
 #info {
     background-image: url("../img/info-desktop.jpg");
     position: relative;
-    min-height: 100%;
 }
 
 #info::before {
@@ -121,26 +122,81 @@ a.scrollmore:hover {
     right: 0px;
     bottom: 0px;
     left: 0px;
-    background-color: rgba(255,255,255,0.35);
+    background-color: rgba(0,0,0,0.5);
 }
 
-#feature {
+.feature {
     z-index: 1 !important;
-    background-color: rgba(255,255,255,0.5);
 }
 
-/*Homepage media queries*/
-
-@media only screen and (max-width: 786px) {
-    .title {
-        top: calc(50% - 115px)
-    }
+.feature-fit {
+    max-width: 100%;
 }
 
-@media only screen and (max-width: 992px) {
-    .title {
-        top: calc(50% - 140px)
-    }
+.carousel-inner > *{
+    width:100%;
+    max-height: 100vh !important;
+}
+
+.carousel-item {
+    object-fit: cover;
+    font-size: 1.2em;
+}
+
+.carousel-caption {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    background-color: rgb(0,0,0,0.35);
+}
+
+.image-center {
+    overflow: hidden;
+    display: flex;
+}
+.image-center img {
+    width: 100%;
+    align-self: center;
+}
+
+.image-center a, .image-center a:visited {
+    color: white;
+}
+
+.image-center a:hover {
+    color:#DDD;
+}
+
+#links{
+    scroll-snap-align: start;
+}
+
+/*Fancybox Tweaks*/
+
+.fancybox-thumbs {
+    top: auto !important;
+    width: auto !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right : 0 !important;
+    height: 95px !important;
+    padding: 10px 10px 5px 10px !important;
+    box-sizing: border-box !important;
+    background: rgba(0, 0, 0, 0.3) !important;
+}
+
+.fancybox-show-thumbs .fancybox-inner {
+    right: 0 !important;
+    bottom: 95px !important;
+}
+
+.fancybox-thumbs__list a::before {
+    border: 5px solid white !important;
+}
+
+.fancybox-caption__body p{
+    margin-bottom: 5px !important;
 }
 
 /*Navbar*/
@@ -161,10 +217,10 @@ a.scrollmore:hover {
 }
 
 .footer-copyright {
-    color: #777;
+    color: #999;
 }
 
-.footer-link {
+.footer-link, .footer-link:visited {
     color: #CCC;
 }
 

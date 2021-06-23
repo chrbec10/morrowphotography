@@ -1,6 +1,9 @@
+<?php if ($title == "Home") echo '<style>
+html, body {scroll-snap-type: y proximity;}
+</style>'?>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark custom-nav">
+    <nav class="navbar navbar-expand-sm navbar-dark custom-nav"<?php if ($title == "Home") {echo 'style="scroll-snap-align: start;"';} ?>>
         <div class="container">
             <a alt="Home" class="navbar-brand" href="<?php echo $site_root?>"><img style="height:40px; width:170px" src="<?php echo $site_root?>/static/img/CMBrand.png" alt=''></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#cmNav" aria-controls="cmNav" aria-expanded="false" aria-label="Toggle navigation">

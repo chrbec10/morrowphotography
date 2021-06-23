@@ -71,7 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="container">
         <h2 class="text-center">Contact Me</h2>
         <br>
-        <p>You're welcome to contact me via email using the form below, or you can send me a private message using any of my social media profiles.</p>
+        <p class="text-center">You're welcome to contact me via email using the form below, or you can send me a private message using any of my social media profiles.</p>
+        <br>
             <p><a href="#"><strong>Facebook:</strong> CMPhotography</a></p>
             <p><a href="#"><strong>Twitter:</strong> @CMPhotography</a></p>
         <br>

@@ -23,17 +23,25 @@ function compressImage($source, $name, $quality, $filepath) {
     //if image is taller than it is wide
     if (imagesy($image) > imagesx($image)) {
 
-        //Scale image to 1000px height
-        $image_hi = imagescale($image, -1, 1000, IMG_BICUBIC);
-        //Save image as high-quality jpeg
+        //Scale image to 2000px height for desktop
+        $image_hi = imagescale($image, -1, 2000, IMG_BICUBIC);
+        //Save image as high-quality jpg
         imagejpeg($image_hi, ($filepath . $name), $quality);
+        //Scale image to 1000px height for mobile
+        $image_mob = imagescale($image, -1, 1000, IMG_BICUBIC);
+        //Save image as mobile-quality jpg
+        imagejpeg($image_mob, ($filepath. "mob_" . $name), $quality);
 
     } else {
 
-        //Scale image to 1500px widt and save as high quality
-        $image_hi = imagescale($image, 1500, -1, IMG_BICUBIC);
+        //Scale image to 3000px width
+        $image_hi = imagescale($image, 3000, -1, IMG_BICUBIC);
         //Save image as high-quality jpeg
         imagejpeg($image_hi, ($filepath . $name), $quality);
+        //Scale image to 1000px height for mobile
+        $image_mob = imagescale($image, 1500, -1, IMG_BICUBIC);
+        //Save image as mobile-quality jpg
+        imagejpeg($image_mob, ($filepath. "mob_" . $name), $quality);
     }
 
     //Scale image down to 150px width
@@ -216,8 +224,7 @@ include_once('../includes/navbar.php');
 <div class="page-container">
     <main class="main">
         <div class="container">
-            <br>
-            <h2 class="text-center">New Image</h2>
+            <h1 class="text-center">New Image</h1>
             <br>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
