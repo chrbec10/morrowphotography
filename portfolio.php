@@ -155,12 +155,12 @@ include_once('includes/navbar.php');
                 <div class="col-lg-3 text-start">
                     <form class="sticky-search" id="search">
                         <div class="form-group">
-                            <label for="title">Search by Title</label>
+                            <label for="searchText">Search by Title</label>
                             <input type="text" name="searchText" id="searchText" class="form-control" value="<?php echo (isset($title_search)) ? $title_search : ''; ?>">
                         </div>
                         <br>
                         <div class="form-group">
-                            <label for="title">Search by Tags</label>
+                            <label for="tags">Search by Tags</label>
                             <select class="tags-select form-control" name="tags[]" id="tags" multiple="multiple">
                                 <?php
                                 foreach($tags_array as $tag){

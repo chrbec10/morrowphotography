@@ -39,7 +39,7 @@ function printImages($printArray) {
         //Print HTML content
         echo "<tr>";
         //Image
-        echo "<td><img style='max-width:100px;max-height:100px;' src='../uploads/thumb_". $img_image ."' /></td>";
+        echo "<td><img style='max-width:100px;max-height:100px;' src='../uploads/tny_". $img_image ."' /></td>";
         //ID Number
         echo "<td>". $img_ID . "</td>";
         //Title
