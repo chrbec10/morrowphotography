@@ -131,7 +131,7 @@ if (isset($_GET['s']) && !empty(trim($_GET['s'])) && isset($_GET['n']) && !empty
 }
 
 //Retrieve tags list to populate Select dropdown
-$sql = "SELECT * FROM tags_list";
+$sql = "SELECT * FROM tags_list ORDER BY tag";
 if($stmt = $pdo->query($sql)) {
     $tags_array = $stmt->fetchAll();
 }

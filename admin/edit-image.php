@@ -15,7 +15,7 @@ if (isset($_GET['r']) && ($_GET['r'] != '')){
     switch($r){
         case 1:
             $response_div = 'alert-success';
-            $response_txt = 'New Agent created successfully';
+            $response_txt = 'New image uploaded successfully';
             break;
         case 2:
             $response_div = 'alert-success';

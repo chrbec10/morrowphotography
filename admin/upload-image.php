@@ -1,4 +1,5 @@
 <?php
+$title = "New Image";
 
 //Setup database access
 include_once("../includes/header.php");
@@ -61,9 +62,9 @@ function compressImage($source, $name, $quality, $filepath) {
 
 
 //Define variables
-$title = $description = $twitter = $facebook = '';
+$img_title = $description = $twitter = $facebook = '';
 $tags = [];
-$title_err = $description_err = $twitter_err = $facebook_err = $tags_err = $image_err = '';
+$img_title_err = $description_err = $twitter_err = $facebook_err = $tags_err = $image_err = '';
 
 //Process form data on submit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -71,14 +72,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Validation for text
     $input_title = trim($_POST['title']);
     if (!empty($input_title)) {
-        $title = $input_title;
+        $img_title = preg_replace('/[^A-Za-z0-9\-\']/', '', $input_title); // Removes special chars
     } else {
-        $title_err = "Please enter a title for the image";
+        $img_title_err = "Please enter a title for the image";
     }
 
     $input_description = trim($_POST['description']);
     if (!empty($input_description)) {
-        $description = $input_description;
+        $description = preg_replace('/[^A-Za-z0-9\-\']/', '', $input_description); // Removes special chars
     } else {
         $description_err = "Please enter a description for the image";
     }
@@ -161,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     //If there aren't any errors
-    if (empty($title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($image_err) && empty($tags_err)) {
+    if (empty($img_title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($image_err) && empty($tags_err)) {
 
         //Create SQL query
         $sql = "INSERT INTO images(title, twitter, facebook, image, description) VALUES (:title, :twitter, :facebook, :image, :description)";
@@ -177,7 +178,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(":description", $param_description);
 
             //Set parameters
-            $param_title = $title;
+            $param_title = $img_title;
             $param_twitter = $twitter;
             $param_facebook = $facebook;
             $param_image = $image_name;
@@ -214,7 +215,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 //Retrieve tags list to populate Select dropdown
-$sql = "SELECT * FROM tags_list";
+$sql = "SELECT * FROM tags_list ORDER BY tag";
 if($stmt = $pdo->query($sql)) {
     $tags_array = $stmt->fetchAll();
 }
@@ -244,8 +245,8 @@ include_once('includes/navbar.php');
                 <br>
                 <div class="form-group">
                     <label for="title">Image Title</label>
-                    <input type="text" class="form-control <?php echo (!empty($title_err)) ? 'is-invalid' : ''; ?>" name="title" id="title" value="<?php echo $title; ?>">
-                    <span class="invalid-feedback"><?php echo $title_err;?></span>
+                    <input type="text" class="form-control <?php echo (!empty($img_title_err)) ? 'is-invalid' : ''; ?>" name="title" id="title" value="<?php echo $img_title; ?>">
+                    <span class="invalid-feedback"><?php echo $img_title_err;?></span>
                 </div>
                 <br>
                 <div class="form-group">

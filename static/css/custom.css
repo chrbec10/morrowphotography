@@ -172,6 +172,11 @@ a.scrollmore:hover {
     scroll-snap-align: start;
 }
 
+/*Form Tweaks*/
+.form-border {
+    background-color: #DDD;
+}
+
 /*Search Tweaks*/
 
 .sticky-search{
