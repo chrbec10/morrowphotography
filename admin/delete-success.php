@@ -2,7 +2,7 @@
 $title = "Success";
 
 include_once("../includes/header.php");
-include_once('../includes/navbar.php');
+include_once('includes/navbar.php');
 header("refresh:5;url= ./");
 ?>
 

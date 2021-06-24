@@ -31,6 +31,10 @@ function compressImage($source, $name, $quality, $filepath) {
         $image_mob = imagescale($image, -1, 1000, IMG_BICUBIC);
         //Save image as mobile-quality jpg
         imagejpeg($image_mob, ($filepath. "mob_" . $name), $quality);
+        //Scale image down to 150px height
+        $image_tny = imagescale($image, -1, 150, IMG_BICUBIC);
+        //Save as tiny
+        imagejpeg($image_tny, ($filepath. "tny_" . $name), 50);
 
     } else {
 
@@ -42,12 +46,17 @@ function compressImage($source, $name, $quality, $filepath) {
         $image_mob = imagescale($image, 1500, -1, IMG_BICUBIC);
         //Save image as mobile-quality jpg
         imagejpeg($image_mob, ($filepath. "mob_" . $name), $quality);
+        //Scale image down to 150px width
+        $image_tny = imagescale($image, 150, -1, IMG_BICUBIC);
+        //Save as tiny
+        imagejpeg($image_tny, ($filepath. "tny_" . $name), 50);
     }
 
-    //Scale image down to 150px width
+    //Scale image down to 500px width
     $image_th = imagescale($image, 500, -1, IMG_BICUBIC);
     //Save image as thumbnail
     imagejpeg($image_th, ($filepath . "thumb_" . $name), $quality);
+
 }
 
 
@@ -219,7 +228,7 @@ unset($pdo);
 
 
 <?php
-include_once('../includes/navbar.php');
+include_once('includes/navbar.php');
 ?>
 <div class="page-container">
     <main class="main">

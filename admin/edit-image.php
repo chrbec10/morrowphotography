@@ -63,7 +63,7 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))){
                 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
                 //Pull values from row
-                $title = $row['title'];
+                $img_title = $row['title'];
                 $twitter = $row['twitter'];
                 $facebook = $row['facebook'];
                 $image = $row['image'];
@@ -99,7 +99,7 @@ if (isset($_GET['id']) && !empty(trim($_GET['id']))){
 }
 
 //Set error variables
-$title_err = $description_err = $twitter_err = $facebook_err = $tags_err = '';
+$img_title_err = $description_err = $twitter_err = $facebook_err = $tags_err = '';
 
 //TODO: Process form data on submit
 if (isset($_POST['id']) && !empty(trim($_POST['id']))){
@@ -107,9 +107,9 @@ if (isset($_POST['id']) && !empty(trim($_POST['id']))){
     //Validation for text
     $input_title = trim($_POST['title']);
     if (!empty($input_title)) {
-        $title = $input_title;
+        $img_title = $input_title;
     } else {
-        $title_err = "Please enter a title for the image";
+        $img_title_err = "Please enter a title for the image";
     }
 
     $input_description = trim($_POST['description']);
@@ -148,7 +148,7 @@ if (isset($_POST['id']) && !empty(trim($_POST['id']))){
     }
     
     //If there aren't any errors
-    if (empty($title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($tags_err)) {
+    if (empty($img_title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($tags_err)) {
 
         //Create SQL query
         $sql = "UPDATE images SET title = :title, twitter = :twitter, facebook = :facebook, description = :description WHERE ID = :image_ID";
@@ -164,7 +164,7 @@ if (isset($_POST['id']) && !empty(trim($_POST['id']))){
             $stmt->bindParam(":image_ID", $param_image_ID);
 
             //Set parameters
-            $param_title = $title;
+            $param_title = $img_title;
             $param_twitter = $twitter;
             $param_facebook = $facebook;
             $param_description = $description;
@@ -212,7 +212,7 @@ if($stmt = $pdo->query($sql)) {
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <?php
-include_once('../includes/navbar.php');
+include_once('includes/navbar.php');
 ?>
 <div class="page-container">
     <main class="main">
@@ -229,8 +229,8 @@ include_once('../includes/navbar.php');
                 <div class="form-group">
                     <input type="hidden" value="<?php echo $image_ID?>" name="id" id="id">
                     <label for="title">Image Title</label>
-                    <input type="text" class="form-control <?php echo (!empty($title_err)) ? 'is-invalid' : ''; ?>" name="title" id="title" value="<?php echo $title; ?>">
-                    <span class="invalid-feedback"><?php echo $title_err;?></span>
+                    <input type="text" class="form-control <?php echo (!empty($img_title_err)) ? 'is-invalid' : ''; ?>" name="title" id="title" value="<?php echo $img_title; ?>">
+                    <span class="invalid-feedback"><?php echo $img_title_err;?></span>
                 </div>
                 <br>
                 <div class="form-group">
@@ -264,7 +264,7 @@ include_once('../includes/navbar.php');
                 </div>
                 <br>
                 <button type="submit" class="btn btn-dark btn-submit">Submit</button>
-                <a href="delete-image.php?id=<?php echo $image_ID; ?>" class="btn btn-delete float-end confirm">Delete</a>
+                <a data-title="<?php echo $img_title?>" href="delete-image.php?id=<?php echo $image_ID; ?>" class="btn btn-delete float-end confirm">Delete</a>
             </form>
         </div>
     <?php
@@ -290,7 +290,7 @@ include_once('../includes/navbar.php');
     });
 
     $('.confirm').on('click', function () {
-        return confirm('Are you sure you want to delete this image?\nThis action cannot be undone.');
+        return confirm('Are you sure you want to delete '+ $(this).data('title') +'?\nThis action cannot be undone.');
     });
 </script>
 </body>

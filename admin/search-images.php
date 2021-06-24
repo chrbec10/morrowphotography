@@ -1,9 +1,9 @@
 <?php
-$title = "Portfolio";
+$title = "Search Images";
 
-include_once("includes/header.php");
+include_once("../includes/header.php");
 
-require_once("includes/search.php");
+require_once("../includes/search.php");
 
 $result_text = '';
 $result_type = '';
@@ -14,19 +14,47 @@ $search_results = '';
 
 //Print out our column of images
 function printImages($printArray) {
-    echo "<div class='col-md'>";
+    echo "<div class='table-responsive'>";
+        echo "<table class='table table-bordered table-striped'>";
+            echo "<thead>";
+                echo "<tr>";
+                    echo "<th>Image</th>";
+                    echo "<th>ID</th>";
+                    echo "<th>Title</th>";
+                    echo "<th>Description</th>";
+                    echo "<th>Links</th>";
+                    echo "<th>Actions</th>";
+                echo "</tr>";
+            echo "</thead>";
+        echo "<tbody>";
     foreach($printArray as $image) {
         //Set overlay content
-        $img_description = htmlspecialchars($image['description'], ENT_QUOTES);
+        $img_image = htmlspecialchars($image['image'], ENT_QUOTES);
+        $img_ID = $image['ID'];
         $img_title = htmlspecialchars($image['title'], ENT_QUOTES);
+        $img_description = htmlspecialchars($image['description'], ENT_QUOTES);
         $img_facebook = htmlspecialchars($image['facebook'], ENT_QUOTES);
         $img_twitter = htmlspecialchars($image['twitter'], ENT_QUOTES);
         
         //Print HTML content
-        echo "<a href='uploads/" . $image['image'] . "' data-srcset=' uploads/" . $image['image'] . " 1600w, uploads/mob_" . $image['image'] . " 720w' data-fancybox='images' data-fb='" . $img_facebook . "' data-twt='" . $img_twitter . "' data-desc='" . $img_description . "' data-title='" . $img_title . "'>";
-        echo "<img style='max-width:100%; padding-top:0.75rem; padding-bottom:0.75rem;' alt='' src='uploads/thumb_" . $image['image'] . "' />";
-        echo "</a>";
+        echo "<tr>";
+        //Image
+        echo "<td><img style='max-width:100px;max-height:100px;' src='../uploads/thumb_". $img_image ."' /></td>";
+        //ID Number
+        echo "<td>". $img_ID . "</td>";
+        //Title
+        echo "<td>". $img_title ."</td>";
+        //Description
+        echo "<td>". $img_description ."</td>";
+        //Links
+        echo "<td><a href='". $img_facebook ."'><i class='fa fa-facebook-square'></i></a>&nbsp;&nbsp;<a href='". $img_twitter ."'><i class='fa fa-twitter-square'></i></a></td>";
+        //Actions
+        echo '<td><a href="edit-image.php?id=' . $img_ID . '"><i class="fa fa-pencil"></i></a>
+        <a class="delete" data-title="'. $img_title .'" href="delete-image.php?id=' . $img_ID . '"><i class="fa fa-trash"></i></a>';
+    echo "</tr>";
     }
+    echo "</tbody>";
+    echo "</table>";
     echo "</div>";
 }
 
@@ -37,7 +65,7 @@ function fillColumn($imageArr) {
 
     foreach($imageArr as $image) {
         //Get the height of the current image
-        $imgStats = getimagesize('uploads/thumb_'. $image['image']);
+        $imgStats = getimagesize('../uploads/thumb_'. $image['image']);
         $currHeight = $imgStats[1];
         
         //Find which list currently has the smallest total height of images
@@ -139,9 +167,6 @@ if($stmt = $pdo->query($sql)) {
 ?>
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
-<script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
-
 <?php
 include_once('includes/navbar.php');
 ?>
@@ -149,49 +174,46 @@ include_once('includes/navbar.php');
 <div class="page-container">
     <main class="main">
         <div class="container text-center">
-            <h1>Portfolio</h1>
+            <h1>Search Images</h1>
+            <br>
+            <form id="search">
+                <div class="form-group">
+                    <label for="title">Search by Title</label>
+                    <input type="text" name="searchText" id="searchText" class="form-control" value="<?php echo (isset($title_search)) ? $title_search : ''; ?>">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="title">Search by Tags</label>
+                    <select class="tags-select form-control" name="tags[]" id="tags" multiple="multiple">
+                        <?php
+                        foreach($tags_array as $tag){
+                                echo"<option value='" . $tag['ID'] . "'>" . $tag['tag'] . "</option>";
+                        }
+                        ?>
+                    </select>
+                    <br><br>
+                    <button type="submit" class="btn btn-dark btn-submit" style="width:100%;">Search</button>
+                </div>
+            </form>
             <br>
             <div class="row">
-                <div class="col-lg-3 text-start">
-                    <form class="sticky-search" id="search">
-                        <div class="form-group">
-                            <label for="title">Search by Title</label>
-                            <input type="text" name="searchText" id="searchText" class="form-control" value="<?php echo (isset($title_search)) ? $title_search : ''; ?>">
-                        </div>
-                        <br>
-                        <div class="form-group">
-                            <label for="title">Search by Tags</label>
-                            <select class="tags-select form-control" name="tags[]" id="tags" multiple="multiple">
-                                <?php
-                                foreach($tags_array as $tag){
-                                        echo"<option value='" . $tag['ID'] . "'>" . $tag['tag'] . "</option>";
-                                }
-                                ?>
-                            </select>
-                            <br><br>
-                            <button type="submit" class="btn btn-dark btn-submit">Search</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-9">
-
-                    <div class="alert <?php echo (!empty($result_type)) ? $result_type : 'd-none'; ?>"><?php echo $result_text; ?></div>
-                    <div class="row">
-                    <?php 
-                        if ($result_success){
-                            fillColumn($search_results);
-                        }
-                    ?>
-                    </div>
-                </div>
+            <?php 
+                if ($result_success){
+                    printImages($search_results);
+                }
+            ?>
             </div>
         </div>
 <?php
-include_once("includes/footer.php");
+include_once("../includes/footer.php");
 ?>
     </main>
 </div>
 <script>
+    $('.delete').on('click', function () {
+        return confirm('Are you sure you want to delete '+ $(this).data('title') +'?\nThis action cannot be undone.');
+    });
+
     $(document).ready(function() {
         //Setup select box for tags
         $('.tags-select').select2();
@@ -209,7 +231,6 @@ include_once("includes/footer.php");
         $('.tags-select').val([<?php echo $selected_tags; ?>]).trigger('change');
     });
 
-    //Sets search parameters in the URL
     $('#search').on('submit', function () {
 
         var currentTags = $('#tags').select2('data');
@@ -239,20 +260,6 @@ include_once("includes/footer.php");
             var tagSearch = tagList.join('+');
             window.location.href = "<?php echo $_SERVER["PHP_SELF"]?>?s=" + tagSearch +"&n=" + currentText;
             return false;
-        }
-    });
-
-    //Setup for Fancybox
-    $('[data-fancybox="images"]').fancybox({
-        //Turn thumbnails on
-        thumbs: {
-            autoStart: true,
-            axis: 'x'
-        },
-        //Build caption for each image
-        caption: function( instance, item ) {
-            var caption = '<h5>' + $(this).data('title') + '</h5><p>' + $(this).data('desc') + '</p><p>View on: <a href="' + $(this).data('fb') + '"><i class="fa fa-facebook-square"></i> Facebook</a> <a href="' + $(this).data('twt') + '"><i class="fa fa-twitter-square"></i> Twitter</a></p>';
-            return caption;
         }
     });
 </script>
