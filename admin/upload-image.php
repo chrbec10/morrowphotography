@@ -112,101 +112,106 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tags_err = "Please select at least one tag for the image";
     }
 
-    //Validate file upload
-    if(isset($_FILES["image"]) && $_FILES["image"]["error"] == 0){
 
-        //Set up constraints
-        $allowed = array("jpg", "jpeg", "gif", "png");
-        $maxsize = 5 * 1024 * 1024;
-
-        //Set up destination for images
-        $destination = "../uploads/";
-
-        //Quality setting for images
-        $quality = 90;
-
-        //Get information about file
-        $filesize = filesize($_FILES["image"]["tmp_name"]);
-        $filetype = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
-        $filename = $_FILES["image"]["name"];
-        $error = $_FILES["image"]["error"];
-
-        //Check filesize
-        if ($filesize > $maxsize) {
-            $image_err = 'File too large. Please upload a file that is less than 5MB in size.';
-        
-        //Check errors
-        } else if ($error != 0){
-            $image_err = 'Error uploading file. Error code: ' . $error;
-        
-        //Check filetype
-        } else if(!in_array(strtolower($filetype), $allowed)) {
-            $image_err = 'File is wrong filetype. Please upload a .jpg, .jpeg, .gif, or .png file.';
-        
-        //If no problems
-        } else {
-            //Select image, create image name
-            $image = $_FILES["image"]["tmp_name"];
-            $image_name = hash_file('sha1', $image) . '.jpg';
-            if (!file_exists($destination . '/' . $image_name)){
-                compressImage($image, $image_name, $quality, $destination);
-            } else {
-                $image_err = 'Image already exists. Please choose a new file to upload.';
-            }
-        }
-    } else if(!isset($_FILES["image"]) || ($_FILES["image"]["error"] == 4)) {
-        $image_err = 'Please choose an image to upload.';
-
-    } else {
-        $image_err = 'Error uploading file. Error code: ' . $_FILES["image"]["error"];
-    }
 
     //If there aren't any errors
-    if (empty($img_title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($image_err) && empty($tags_err)) {
+    if (empty($img_title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($tags_err)) {
+            //Validate file upload
+        if(isset($_FILES["image"]) && $_FILES["image"]["error"] == 0){
 
-        //Create SQL query
-        $sql = "INSERT INTO images(title, twitter, facebook, image, description) VALUES (:title, :twitter, :facebook, :image, :description)";
+            //Set up constraints
+            $allowed = array("jpg", "jpeg", "gif", "png");
+            $maxsize = 5 * 1024 * 1024;
 
-        //If query prepares successfully
-        if ($stmt = $pdo->prepare($sql)) {
+            //Set up destination for images
+            $destination = "../uploads/";
 
-            //Bind variables
-            $stmt->bindParam(":title", $param_title);
-            $stmt->bindParam(":twitter", $param_twitter);
-            $stmt->bindParam(":facebook", $param_facebook);
-            $stmt->bindParam(":image", $param_image);
-            $stmt->bindParam(":description", $param_description);
+            //Quality setting for images
+            $quality = 90;
 
-            //Set parameters
-            $param_title = $img_title;
-            $param_twitter = $twitter;
-            $param_facebook = $facebook;
-            $param_image = $image_name;
-            $param_description = $description;
+            //Get information about file
+            $filesize = filesize($_FILES["image"]["tmp_name"]);
+            $filetype = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+            echo $filetype;
+            $filename = $_FILES["image"]["tmp_name"];
+            $error = $_FILES["image"]["error"];
+
+            //Check filesize
+            if ($filesize > $maxsize) {
+                $image_err = 'File too large. Please upload a file that is less than 5MB in size.';
             
-            //If query executes successfully
-            if($stmt->execute()) {
+            //Check errors
+            } else if ($error != 0){
+                $image_err = 'Error uploading file. Error code: ' . $error;
+            
+            //Check filetype
+            } else if(!in_array(strtolower($filetype), $allowed)) {
+                $image_err = 'File is wrong filetype. Please upload a .jpg, .jpeg, .gif, or .png file.';
+            
+            //If no problems
+            } else {
+                //Select image, create image name
+                $image = $_FILES["image"]["tmp_name"];
+                $image_name = hash_file('sha1', $image) . '.jpg';
+                if (!file_exists($destination . '/' . $image_name)){
+                    compressImage($image, $image_name, $quality, $destination);
+                } else {
+                    $image_err = 'Image already exists. Please choose a new file to upload.';
+                }
+            }
+        } else if(!isset($_FILES["image"]) || ($_FILES["image"]["error"] == 4)) {
+            $image_err = 'Please choose an image to upload.';
 
-                //Get ID of created entry
-                $sql = "SELECT MAX(ID) FROM images";
-                if ($stmt = $pdo->query($sql)){
+        } else {
+            $image_err = 'Error uploading file. Error code: ' . $_FILES["image"]["error"];
+        }
 
-                    $created = ($stmt->fetchColumn());
-                    //Ready a statement to insert tags
-                    $sql = "INSERT INTO tags_rel(image_ID, tag_ID) VALUES";
-                    
-                    //Build an insert row for each tag
-                    foreach($tags as $tag) {
+        if(empty($image_err)){
+
+            //Create SQL query
+            $sql = "INSERT INTO images(title, twitter, facebook, image, description) VALUES (:title, :twitter, :facebook, :image, :description)";
+
+            //If query prepares successfully
+            if ($stmt = $pdo->prepare($sql)) {
+
+                //Bind variables
+                $stmt->bindParam(":title", $param_title);
+                $stmt->bindParam(":twitter", $param_twitter);
+                $stmt->bindParam(":facebook", $param_facebook);
+                $stmt->bindParam(":image", $param_image);
+                $stmt->bindParam(":description", $param_description);
+
+                //Set parameters
+                $param_title = $img_title;
+                $param_twitter = $twitter;
+                $param_facebook = $facebook;
+                $param_image = $image_name;
+                $param_description = $description;
+                
+                //If query executes successfully
+                if($stmt->execute()) {
+
+                    //Get ID of created entry
+                    $sql = "SELECT MAX(ID) FROM images";
+                    if ($stmt = $pdo->query($sql)){
+
+                        $created = ($stmt->fetchColumn());
+                        //Ready a statement to insert tags
+                        $sql = "INSERT INTO tags_rel(image_ID, tag_ID) VALUES";
                         
-                        $sql .= "(" . $created . "," . $tag . "),";
-                    };
+                        //Build an insert row for each tag
+                        foreach($tags as $tag) {
+                            
+                            $sql .= "(" . $created . "," . $tag . "),";
+                        };
 
-                    //Trim last comma from SQL query
-                    $sql = substr($sql, 0, -1);
-                    $sql .= ";";
-                    //If our tags are inserted successfully
-                    if($stmt=$pdo->query($sql)) {
-                        header("location: edit-image.php?id=" . $created);
+                        //Trim last comma from SQL query
+                        $sql = substr($sql, 0, -1);
+                        $sql .= ";";
+                        //If our tags are inserted successfully
+                        if($stmt=$pdo->query($sql)) {
+                            header("location: edit-image.php?id=" . $created);
+                        }
                     }
                 }
             }
@@ -303,4 +308,3 @@ include_once('includes/navbar.php');
     });
 </script>
 </body>
-

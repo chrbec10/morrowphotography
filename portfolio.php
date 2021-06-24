@@ -186,12 +186,7 @@ include_once('includes/navbar.php');
                 </div>
             </div>
         </div>
-<?php
-include_once("includes/footer.php");
-?>
-    </main>
-</div>
-<script>
+        <script>
     $(document).ready(function() {
         //Setup select box for tags
         $('.tags-select').select2();
@@ -256,4 +251,10 @@ include_once("includes/footer.php");
         }
     });
 </script>
+<?php
+include_once("includes/footer.php");
+?>
+    </main>
+</div>
+
 </body>

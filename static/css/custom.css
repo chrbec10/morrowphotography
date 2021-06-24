@@ -224,6 +224,10 @@ a.scrollmore:hover {
     margin-bottom: 5px !important;
 }
 
+.fancybox-bg {
+    opacity: 1 !important;
+}
+
 /*Navbar*/
 
 .custom-nav {
