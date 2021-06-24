@@ -7,6 +7,7 @@ $name = $email = $subject = $message = '';
 $name_err = $email_err = $subject_err = $message_err = '';
 $to = 'ahdelacy@gmail.com';
 $headers = 'From: contact@morrophotography.rf.gd';
+$sent = false;
 
 //Server-side email validation
 function emailCheck($address){
@@ -62,7 +63,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($name_err) && empty($email_err) && empty($message_err) && empty($subject_err)) {
         $subject_line = "Message from '" . $name . "' at " . $email . " on Morrow Photography: " . $subject;
         mail($to, $subject_line, $message, $headers);
+        $sent = true;
     }
+}
+
+if ($sent){
+    $name = $email = $subject = $message = '';
 }
 
 ?>
@@ -112,6 +118,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!--Client-side form validation-->
 <script>
+    <?php
+        if ($sent){
+            echo "alert('Thanks for getting in touch! You should get a reply soon.');";
+        }
+    ?>
     //Set up constraints
     const constraints = {
         name: {
