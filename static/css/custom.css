@@ -172,6 +172,26 @@ a.scrollmore:hover {
     scroll-snap-align: start;
 }
 
+/*Search Tweaks*/
+
+.sticky-search{
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
+}
+
+@media (min-width: 992px){
+    .sticky-search{
+        position: sticky;
+        top: 0;
+    }
+}
+
+/*Select2 Tweaks*/
+
+.select2-container {
+    width:100% !important;
+}
+
 /*Fancybox Tweaks*/
 
 .fancybox-thumbs {

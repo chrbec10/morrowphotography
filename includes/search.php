@@ -1,39 +1,49 @@
 <?php
+require_once(__DIR__ . '/db.php');
 
 //Get a string containing tags separated by commas for SQL query
-function tagString($tag_string) {
-    //Explode tags into an array
-    $search_array = explode('+', $tag_string);
-    $tag_count = count($search_array);
+function tagString($search_string) {
 
-    //Use tags to build a query string
-    foreach ($search_array as $tag) {
-        $tags_array .= $tag;
-        $tags_array .= ', ';
+    //Explode tags into an array, stripping non-numeric tags
+    $tags_array = array_filter(array_map('trim', explode(' ', $search_string)), 'is_numeric');
+
+    //If there are no numeric tags
+    if (empty($tags_array)) {
+        return false;
+
+    //Else condense them back down into something useful
+    } else {
+        return implode(', ', $tags_array);
     }
-    $tags_array = substr($tags_array, 0, -2);
-    $tags_return = [$tags_Array, $tag_count];
-    return $tags_return;
+}
+
+//Count the number of numeric tags
+function tagCount($search_string) {
+    $tags_array = array_filter(array_map('trim', explode(' ', $search_string)), 'is_numeric');
+    return count($tags_array);
 }
 
 //Search for images matching all tags using a '+' separated string. Failure will result in false being returned, lack of results returns "none".
-function tagSearch($search_string) {
+function tagSearch(PDO $pdo, $search_string) {
 
     //Rearrange string for SQL and get number of tags
-    $tags_array = tagString($search_string);
+    if (!$tags_array = tagString($search_string)) return 'none';
+    //$tags_array = tagString($search_string);
+    $tags_count = tagCount($search_string);
 
     //Select image IDs from tags join table that have all the searched tags
-    $sql = "SELECT image_ID FROM tags_rel WHERE tag_ID IN (:tags_array) GROUP BY image_ID HAVING COUNT(DISTINCT tag_ID) = :tag_count;"
+    $sql = "SELECT image_ID FROM tags_rel WHERE tag_ID IN ($tags_array) GROUP BY image_ID HAVING COUNT(*) = :tag_count";
+
     if ($stmt = $pdo->prepare($sql)) {
-        $stmt->bindParam(':tags_array', $param_tags_array);
         $stmt->bindParam(':tag_count', $param_tag_count);
 
-        $param_tags_array = $tags_array[0];
-        $param_tag_count = $tags_array[1];
+        $param_tag_count = $tags_count;
 
         //If it executed successfully
-        if ($stmt = $pdo->execute()) {
+        if ($stmt->execute()) {
+
             $result = $stmt->fetchAll();
+            unset($stmt);
 
             //If we got at least 1 ID back
             if (count($result) > 0) {
@@ -41,18 +51,15 @@ function tagSearch($search_string) {
                 //Process our list of IDs into a string for SQL
                 $id_string = '';
                 foreach ($result as $ID) {
-                    $id_string .= $ID;
+                    $id_string .= $ID['image_ID'];
                     $id_string .= ', ';
                 }
-                $id_string = substr($ID_string, 0, -2);
+                $id_string = substr($id_string, 0, -2);
 
                 //Select all images with matching IDs
-                $sql = "SELECT * FROM images WHERE ID IN (:id_array);"
-                $stmt->bindParam(':id_array', $param_id_string);
-                $param_id_string = $id_string;
+                $sql = "SELECT * FROM images WHERE ID IN (" . $id_string . ")";
+                if ($stmt = $pdo->query($sql)){
 
-                //Return an array of all images
-                if ($stmt = $pdo->execute()) {
                     $result = $stmt->fetchAll();
                     return $result;
 
@@ -74,9 +81,10 @@ function tagSearch($search_string) {
 }
 
 //Search for all images with titles matching a search string. Failure will result in false being returned, lack of results returns "none".
-function nameSearch($search_string) {
+function nameSearch(PDO $pdo, $search_string) {
     //Build SQL query
     $search_name = '%' . $search_string . '%';
+    
 
     $sql = "SELECT * FROM images WHERE title LIKE :title";
     if ($stmt = $pdo->prepare($sql)) {
@@ -85,11 +93,12 @@ function nameSearch($search_string) {
         $param_search_name = $search_name;
 
         //If SQL query succeeds, return an array of images
-        if ($stmt = $pdo->execute()) {
+        if ($stmt->execute()) {
 
             $result = $stmt->fetchAll();
+            unset($stmt);
             if (count($result) > 0) {
-                return $result
+                return $result;
             } else {
                 return 'none';
             }
@@ -104,25 +113,25 @@ function nameSearch($search_string) {
 }
 
 //Search for images matching all tags using a '+' separated string. Failure will result in false being returned, lack of results returns "none".
-function bothSearch($tag_string, $title_string) {
+function bothSearch(PDO $pdo, $tag_string, $title_string) {
 
     $search_name = '%' . $title_string . '%';
 
     //Rearrange string for SQL and get number of tags
-    $tags_array = tagString($tag_string);
+    if (!$tags_array = tagString($tag_string)) return 'none';
+    $tags_count = tagCount($tag_string);
 
     //Select image IDs from tags join table that have all the searched tags
-    $sql = "SELECT image_ID FROM tags_rel WHERE tag_ID IN (:tags_array) GROUP BY image_ID HAVING COUNT(DISTINCT tag_ID) = :tag_count;"
+    $sql = "SELECT image_ID FROM tags_rel WHERE tag_ID IN ($tags_array) GROUP BY image_ID HAVING COUNT(*) = :tag_count";
     if ($stmt = $pdo->prepare($sql)) {
-        $stmt->bindParam(':tags_array', $param_tags_array);
         $stmt->bindParam(':tag_count', $param_tag_count);
 
-        $param_tags_array = $tags_array[0];
-        $param_tag_count = $tags_array[1];
-
+        $param_tag_count = $tags_count;
+        
         //If it executed successfully
-        if ($stmt = $pdo->execute()) {
+        if ($stmt->execute()) {
             $result = $stmt->fetchAll();
+            unset($stmt);
 
             //If we got at least 1 ID back
             if (count($result) > 0) {
@@ -130,29 +139,34 @@ function bothSearch($tag_string, $title_string) {
                 //Process our list of IDs into a string for SQL
                 $id_string = '';
                 foreach ($result as $ID) {
-                    $id_string .= $ID;
+                    $id_string .= $ID['image_ID'];
                     $id_string .= ', ';
                 }
-                $id_string = substr($ID_string, 0, -2);
 
+                $id_string = substr($id_string, 0, -2);
                 //Select all images with matching IDs
-                $sql = "SELECT * FROM images WHERE (ID IN (:id_array)) AND (title LIKE :title;"
-                $stmt->bindParam(':id_array', $param_id_string);
-                $stmt->bindParam(':title', $param_title);
+                $sql = "SELECT * FROM images WHERE ID IN ($id_string) AND UPPER(title) LIKE UPPER(:title)";
 
-                $param_id_string = $id_string;
-                $param_title = $search_name;
+                if ($stmt = $pdo->prepare($sql)){
+                    $stmt->bindParam(':title', $param_title);
 
-                //Return an array of all images
-                if ($stmt = $pdo->execute()) {
+                    $param_title = $search_name;
 
-                    $result = $stmt->fetchAll();
+                    //Return an array of all images
+                    if ($stmt->execute()) {
 
-                    if (count($result) > 0) {
-                    return $result;
+                        $result = $stmt->fetchAll();
+
+                        if (count($result) > 0) {
+
+                        return $result;
+
+                        } else {
+                            return 'none';
+                        }
 
                     } else {
-                        return 'none';
+                        return false;
                     }
 
                 } else {
@@ -167,6 +181,23 @@ function bothSearch($tag_string, $title_string) {
             return false;
         }
 
+    } else {
+        return false;
+    }
+}
+
+function getAll(PDO $pdo) {
+    $sql = "SELECT * FROM images";
+    if ($stmt = $pdo->query($sql)) {
+        $result = $stmt->fetchAll();
+
+        if (count($result) > 0) {
+            return $result;
+
+        } else {
+            return 'none';
+        }
+    
     } else {
         return false;
     }

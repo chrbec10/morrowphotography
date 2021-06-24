@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="page-container">
 <main class="main">
     <div class="container">
-        <h2 class="text-center">Contact Me</h2>
+        <h1 class="text-center">Contact</h1>
         <br>
         <p class="text-center">You're welcome to contact me via email using the form below, or you can send me a private message using any of my social media profiles.</p>
         <br>
