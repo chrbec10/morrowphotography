@@ -208,7 +208,7 @@ a.scrollmore:hover {
     height: 95px !important;
     padding: 10px 10px 5px 10px !important;
     box-sizing: border-box !important;
-    background: rgba(0, 0, 0, 0.3) !important;
+    background: black !important;
 }
 
 .fancybox-show-thumbs .fancybox-inner {
