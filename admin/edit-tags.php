@@ -62,7 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //Strip special characters from tag name
         if(!empty($input_tag)){
-            $new = preg_replace('/[^A-Za-z0-9\-\']/', '', $input_tag);
+            $new = preg_replace('/[^A-Za-z0-9\-\'\s]/', '', $input_tag);
 
             
         //If the new tag name isn't empty after being stripped prep SQL insert
@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $input_tag = trim($_POST['editTag']);
         $input_id = trim($_POST['chooseTag']);
         if(!empty($input_tag)){
-            $edit = preg_replace('/[^A-Za-z0-9\-\']/', '', $input_tag); // Removes special chars
+            $edit = preg_replace('/[^A-Za-z0-9\-\'\s]/', '', $input_tag); // Removes special chars
             $id = preg_replace('/[^0-9]/', '', $input_id);
             if(!empty($edit) && !empty($id)) {
                 $sql = "UPDATE tags_list SET tag = :tag WHERE ID = :ID";
