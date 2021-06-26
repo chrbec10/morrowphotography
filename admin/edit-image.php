@@ -107,14 +107,14 @@ if (isset($_POST['id']) && !empty(trim($_POST['id']))){
     //Validation for text
     $input_title = trim($_POST['title']);
     if (!empty($input_title)) {
-        $img_title = $input_title;
+        $img_title = htmlspecialchars($input_title, ENT_QUOTES);
     } else {
         $img_title_err = "Please enter a title for the image";
     }
 
     $input_description = trim($_POST['description']);
     if (!empty($input_description)) {
-        $description = $input_description;
+        $description = htmlspecialchars($input_description, ENT_QUOTES);
     } else {
         $description_err = "Please enter a description for the image";
     }
@@ -221,8 +221,8 @@ include_once('includes/navbar.php');
             <?php if($response_div != "d-none") {echo "<br>";} ?>
             <h1 class="text-center">Edit Image</h1>
             <br>
-            <div style="text-align: center;">
-                <img style="max-width:400px; max-height:400px; text-align:center; box-shadow: 0 5px 10px #555;" src="<?php echo '../uploads/thumb_' . $image;?>">
+            <div class="container text-center" style="max-width:400px;">
+                <img style="max-width:100%; max-height:400px; text-align:center; box-shadow: 0 5px 10px #555;" src="<?php echo '../uploads/thumb_' . $image;?>">
             </div>
             <br>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) . '?id=' . $image_ID; ?>" method="POST" enctype="multipart/form-data">

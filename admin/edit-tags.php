@@ -1,4 +1,7 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 $title = "Manage Tags";
 include_once("../includes/header.php");
 require_once("../includes/db.php");
@@ -62,11 +65,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         //Strip special characters from tag name
         if(!empty($input_tag)){
-            $new = preg_replace('/[^A-Za-z0-9\-\'\s]/', '', $input_tag);
 
-            
         //If the new tag name isn't empty after being stripped prep SQL insert
-            if (!empty($new)){ 
+            if (preg_match('/[^A-Za-z0-9\-\'\s]/', '', $input_tag)){ 
+                $new = $input_tag;
                 $sql = "INSERT INTO tags_list(tag) VALUES (:new)";
 
                 if ($stmt = $pdo->prepare($sql)) {
@@ -83,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 }
 
             } else {
-                $new_err = 'Please enter a valid tag. English characters, hyphens, and apostrophes only.';
+                $new_err = 'Please enter a valid tag. English characters, numbers, hyphens, and apostrophes only.';
             }
         } else {
             $new_err = 'Please enter the name of a tag to add.';
@@ -93,10 +95,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else if ($_POST['frmname'] == 'edit') {
         $input_tag = trim($_POST['editTag']);
         $input_id = trim($_POST['chooseTag']);
-        if(!empty($input_tag)){
-            $edit = preg_replace('/[^A-Za-z0-9\-\'\s]/', '', $input_tag); // Removes special chars
-            $id = preg_replace('/[^0-9]/', '', $input_id);
-            if(!empty($edit) && !empty($id)) {
+        if(!empty($input_tag) && !empty($input_id)){
+
+            if(preg_match('/[^A-Za-z0-9\-\'\s]/', '', $input_tag) && preg_match('/[^0-9]/', '', $input_id)) {
+
+                $edit = $input_tag;
+                $id = $input_id;
+
                 $sql = "UPDATE tags_list SET tag = :tag WHERE ID = :ID";
 
                 if ($stmt = $pdo->prepare($sql)) {
@@ -118,12 +123,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     header("location: edit-tags.php?r=6");
                 }
 
-            } else {
-                $delete_err = 'Please choose a valid tag to delete';
-            }
+            } else if (!preg_match('/[^A-Za-z0-9\-\'\s]/', '', $input_tag)) {
+                $edit_text_err = 'Please enter a valid tag. English characters, numbers, hyphens, and apostrophes only.';
+
+            } else if (!preg_match('/[^0-9]/', '', $input_id)) {
+                $edit_err = 'Please choose a valid tag to delete';
+            } 
 
         } else {
-            $edit_err = 'Please enter a new name for the tag.';
+            $edit_text_err = 'Please enter a new name for the tag.';
         }
 
     //If we're deleting an existing tag

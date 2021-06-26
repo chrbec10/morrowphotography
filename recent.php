@@ -12,7 +12,7 @@ require_once("includes/db.php");
 $images = [];
 
 //Grab the 20 most recently uploaded images
-$sql = "SELECT * FROM images ORDER BY ID LIMIT 20";
+$sql = "SELECT * FROM images ORDER BY ID DESC LIMIT 10";
 if ($stmt = $pdo->query($sql)) {
     $images = $stmt->fetchAll();
     $count = count($images);

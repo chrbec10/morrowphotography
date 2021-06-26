@@ -187,7 +187,7 @@ function bothSearch(PDO $pdo, $tag_string, $title_string) {
 }
 
 function getAll(PDO $pdo) {
-    $sql = "SELECT * FROM images";
+    $sql = "SELECT * FROM images ORDER BY ID DESC";
     if ($stmt = $pdo->query($sql)) {
         $result = $stmt->fetchAll();
 

@@ -47,10 +47,9 @@ function printImages($printArray) {
         //Description
         echo "<td>". $img_description ."</td>";
         //Links
-        echo "<td><a href='". $img_facebook ."'><i class='fa fa-facebook-square'></i></a>&nbsp;&nbsp;<a href='". $img_twitter ."'><i class='fa fa-twitter-square'></i></a></td>";
+        echo "<td><a href='". $img_facebook ."'><i class='fa fa-2x fa-facebook-square'></i></a><a href='". $img_twitter ."'><i class='fa fa-2x fa-twitter-square'></i></a></td>";
         //Actions
-        echo '<td><a href="edit-image.php?id=' . $img_ID . '"><i class="fa fa-pencil"></i></a>
-        <a class="delete" data-title="'. $img_title .'" href="delete-image.php?id=' . $img_ID . '"><i class="fa fa-trash"></i></a>';
+        echo '<td><a href="edit-image.php?id=' . $img_ID . '"><i class="fa fa-2x fa-pencil"></i></a><a class="delete" data-title="'. $img_title .'" href="delete-image.php?id=' . $img_ID . '"><i class="fa fa-2x fa-trash"></i></a>';
     echo "</tr>";
     }
     echo "</tbody>";

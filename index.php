@@ -2,7 +2,9 @@
 $title = "Home";
 include_once("includes/header.php");
 ?>
+
 <link rel="preload" as="image" href="<?php echo $site_root?>/static/img/CM Signature White.png"/>
+
 <?php
 include_once("includes/navbar.php");
 ?>
@@ -18,8 +20,6 @@ include_once("includes/navbar.php");
             <i class="fa fa-chevron-down"></i>
         </div>
     </div>
-
-
 
     <div id="links" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
@@ -66,13 +66,12 @@ include_once("includes/navbar.php");
         </button>
         </div>
 
-
     <!--Footer-->
     <div style="background-color: #222;color: #CCC; scroll-snap-align: start;">
         <div class="container pt-3 pb-1">
             <div class="row">
                 <div class="col-6 text-start">
-                    <a class="navbar-brand float-left" href="https://morrowphotography.rf.gd/"><img style="height:40px" src="<?php echo $site_root?>/static/img/CMBrand.png" alt=''></a>
+                    <a class="navbar-brand float-left" href="<?php echo $site_root?>"><img style="height:40px" src="<?php echo $site_root?>/static/img/CMBrand.png" alt=''></a>
                 </div>
                 <div class="col-6 text-end">
                     <span class="float-right"><a alt="Morrow Photography Facebook" href="https://morrowphotography.rf.gd/" class="footer-link"><i class="fa fa-3x fa-facebook-square"></i></a></span>

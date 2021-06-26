@@ -69,21 +69,23 @@ $img_title_err = $description_err = $twitter_err = $facebook_err = $tags_err = $
 //Process form data on submit
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    //Validation for text
+    //Validation title text
     $input_title = trim($_POST['title']);
     if (!empty($input_title)) {
-        $img_title = preg_replace('/[^A-Za-z0-9\-\']/', '', $input_title); // Removes special chars
+        $img_title = htmlspecialchars($input_title, ENT_QUOTES); // Escapes special chars
     } else {
         $img_title_err = "Please enter a title for the image";
     }
 
+    //Validate description text
     $input_description = trim($_POST['description']);
     if (!empty($input_description)) {
-        $description = preg_replace('/[^A-Za-z0-9\-\']/', '', $input_description); // Removes special chars
+        $description = htmlspecialchars($input_description, ENT_QUOTES); // Escapes special chars
     } else {
         $description_err = "Please enter a description for the image";
     }
 
+    //Validate twitter link
     $input_twitter = trim($_POST['twitter']);
     if (!empty($input_twitter)) {
         if (filter_var($input_twitter, FILTER_VALIDATE_URL) !== false) {
@@ -95,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $twitter_err = "Please enter a twitter link";
     }
 
+    //Validate facebook link
     $input_facebook = trim($_POST['facebook']);
     if (!empty($input_facebook)) {
         if (filter_var($input_facebook, FILTER_VALIDATE_URL) !== false) {
@@ -106,64 +109,65 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $facebook_err = "Please enter a facebook link";
     }
 
+    //Validate tags
     if (!empty($_POST['tags'])) {
         $tags = $_POST['tags'];
     } else {
         $tags_err = "Please select at least one tag for the image";
     }
 
+    //Validate file upload
+    if(isset($_FILES["image"]) && $_FILES["image"]["error"] == 0){
 
+        //Set up constraints
+        $allowed = array("jpg", "jpeg", "gif", "png");
+        $maxsize = 5 * 1024 * 1024;
 
-    //If there aren't any errors
-    if (empty($img_title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($tags_err)) {
-            //Validate file upload
-        if(isset($_FILES["image"]) && $_FILES["image"]["error"] == 0){
+        //Set up destination for images
+        $destination = "../uploads/";
 
-            //Set up constraints
-            $allowed = array("jpg", "jpeg", "gif", "png");
-            $maxsize = 5 * 1024 * 1024;
+        //Quality setting for images
+        $quality = 90;
 
-            //Set up destination for images
-            $destination = "../uploads/";
+        //Get information about file
+        $filesize = filesize($_FILES["image"]["tmp_name"]);
+        $filetype = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
+        $filename = $_FILES["image"]["tmp_name"];
+        $error = $_FILES["image"]["error"];
 
-            //Quality setting for images
-            $quality = 90;
-
-            //Get information about file
-            $filesize = filesize($_FILES["image"]["tmp_name"]);
-            $filetype = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
-            echo $filetype;
-            $filename = $_FILES["image"]["tmp_name"];
-            $error = $_FILES["image"]["error"];
-
-            //Check filesize
-            if ($filesize > $maxsize) {
-                $image_err = 'File too large. Please upload a file that is less than 5MB in size.';
-            
-            //Check errors
-            } else if ($error != 0){
-                $image_err = 'Error uploading file. Error code: ' . $error;
-            
-            //Check filetype
-            } else if(!in_array(strtolower($filetype), $allowed)) {
-                $image_err = 'File is wrong filetype. Please upload a .jpg, .jpeg, .gif, or .png file.';
-            
-            //If no problems
-            } else {
-                //Select image, create image name
-                $image = $_FILES["image"]["tmp_name"];
-                $image_name = hash_file('sha1', $image) . '.jpg';
-                if (!file_exists($destination . '/' . $image_name)){
-                    compressImage($image, $image_name, $quality, $destination);
-                } else {
-                    $image_err = 'Image already exists. Please choose a new file to upload.';
-                }
-            }
-        } else if(!isset($_FILES["image"]) || ($_FILES["image"]["error"] == 4)) {
+        //Check filesize
+        if ($filesize > $maxsize) {
+            $image_err = 'File too large. Please upload a file that is less than 5MB in size.';
+        
+        //Check errors
+        } else if ($error != 0){
+            $image_err = 'Error uploading file. Error code: ' . $error;
+        
+        //Check filetype
+        } else if(!in_array(strtolower($filetype), $allowed)) {
+            $image_err = 'File is wrong filetype. Please upload a .jpg, .jpeg, .gif, or .png file.';
+        }
+    
+    } else if(!isset($_FILES["image"]) || ($_FILES["image"]["error"] == 4)) {
             $image_err = 'Please choose an image to upload.';
 
+    }else if ($_FILES["image"]["error"] == 1 || $_FILES["image"]["error"] == 2) {
+            $image_err = 'File too large. Please upload a file that is less than 5MB in size.';
+
+    } else {
+        $image_err = 'Error uploading file. Error code: ' . $_FILES["image"]["error"];
+    }
+
+    //If there aren't any errors
+    if (empty($img_title_err) && empty($description_err) && empty($twitter_err) && empty($facebook_err) && empty($tags_err) && empty($image_err)) {
+
+        //Select image, create image name
+        $image = $_FILES["image"]["tmp_name"];
+        $image_name = hash_file('sha1', $image) . '.jpg';
+        if (!file_exists($destination . '/' . $image_name)){
+            compressImage($image, $image_name, $quality, $destination);
         } else {
-            $image_err = 'Error uploading file. Error code: ' . $_FILES["image"]["error"];
+            $image_err = 'Image already exists. Please choose a new file to upload.';
         }
 
         if(empty($image_err)){
@@ -243,6 +247,7 @@ include_once('includes/navbar.php');
             <br>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
+                    <input type="hidden" name="MAX_FILE_SIZE" value="5242880">
                     <input type="file" name="image" id="image" class="form-control <?php echo (!empty($image_err)) ? 'is-invalid' : ''; ?>" aria-describedby="fileHelp">
                     <div id="fileHelp" class="form-text">File must be a .jpg, .jpeg, .gif, or .png file, and less than 5MB in size.</div> 
                     <span class="invalid-feedback"><?php echo $image_err;?></span>

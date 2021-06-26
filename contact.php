@@ -118,11 +118,7 @@ if ($sent){
 
 <!--Client-side form validation-->
 <script>
-    <?php
-        if ($sent){
-            echo "alert('Thanks for getting in touch! You should get a reply soon.');";
-        }
-    ?>
+
     //Set up constraints
     const constraints = {
         name: {
@@ -176,6 +172,11 @@ if ($sent){
 <?php
 include_once("includes/footer.php");
 ?>
+    <?php
+        if ($sent){
+            echo "<script>alert('Thanks for getting in touch! You should get a reply soon.');</script>";
+        }
+    ?>
 </main>
 </div>
 </body>
